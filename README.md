@@ -1,11 +1,11 @@
 # Global EV Market Intelligence Dashboard
 
+![Executive Overview Dashboard](assets/screenshots/01_executive_overview.svg)
+
 ![Power BI](https://img.shields.io/badge/Power%20BI-Executive%20Dashboard-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)
 ![DAX](https://img.shields.io/badge/DAX-Advanced%20Measures-00E5FF?style=for-the-badge)
 ![Power Query](https://img.shields.io/badge/Power%20Query-Data%20Transformation-34D399?style=for-the-badge)
 ![Portfolio Project](https://img.shields.io/badge/Portfolio-Recruiter%20Grade-111827?style=for-the-badge)
-
-![Dashboard Preview](assets/dashboard-preview.svg)
 
 ## Executive Summary
 
@@ -257,11 +257,15 @@ See [`docs/data_model_design.md`](docs/data_model_design.md).
 
 ## Dashboard Screenshots
 
-The included preview asset shows the intended executive design direction:
+The dashboard screenshot appears first in this README so recruiters immediately see the finished visual direction.
 
-![Global EV Dashboard Preview](assets/dashboard-preview.svg)
+![Executive Overview](assets/screenshots/01_executive_overview.svg)
+![Market Growth Intelligence](assets/screenshots/02_market_growth.svg)
+![Manufacturer Performance](assets/screenshots/03_manufacturer_performance.svg)
+![Charging Infrastructure](assets/screenshots/04_charging_infrastructure.svg)
+![Forecast Analysis](assets/screenshots/05_forecast_analysis.svg)
 
-When building the final `.pbix`, export screenshots from Power BI Desktop into:
+When replacing these with final Power BI exports, save screenshots into:
 
 ```text
 assets/screenshots/
