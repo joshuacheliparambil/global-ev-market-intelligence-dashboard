@@ -1,0 +1,16 @@
+{
+  "name": "EV Dark Executive Theme",
+  "dataColors": [
+    "#00E5FF",
+    "#34D399",
+    "#F59E0B",
+    "#60A5FA",
+    "#A78BFA",
+    "#F472B6",
+    "#94A3B8",
+    "#F8FAFC"
+  ],
+  "background": "#0B0F14",
+  "foreground": "#F8FAFC",
+  "tableAccent": "#00E5FF"
+}

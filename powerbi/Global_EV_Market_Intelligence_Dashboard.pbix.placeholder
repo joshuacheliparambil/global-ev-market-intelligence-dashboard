@@ -1,0 +1,15 @@
+Power BI Desktop file placeholder.
+
+Create the final PBIX using:
+
+1. powerbi/Power_Query_Transformations.pq
+2. powerbi/DAX_Measures.dax
+3. docs/data_model_design.md
+4. docs/dashboard_layout_plan.md
+5. docs/drillthrough_bookmarks.md
+
+Recommended final file name:
+
+Global_EV_Market_Intelligence_Dashboard.pbix
+
+This environment cannot author a native PBIX file directly, but the repository contains the full project blueprint needed to build the professional Power BI report.

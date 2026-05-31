@@ -1,0 +1,178 @@
+-- Global EV Market Intelligence Dashboard
+-- DAX Measure Library
+
+Total EV Sales =
+SUM('Fact EV Sales'[EV Sales])
+
+Total EV Stock =
+SUM('Fact EV Stock'[EV Stock])
+
+Total Charging Points =
+SUM('Fact Charging Infrastructure'[Charging Points])
+
+Fast Charging Points =
+CALCULATE(
+    [Total Charging Points],
+    'Fact Charging Infrastructure'[Charging Speed] = "Fast"
+)
+
+Slow Charging Points =
+CALCULATE(
+    [Total Charging Points],
+    'Fact Charging Infrastructure'[Charging Speed] = "Slow"
+)
+
+Total Revenue =
+SUMX(
+    'Fact EV Sales',
+    'Fact EV Sales'[EV Sales] * RELATED('Dim Vehicle'[Average Price])
+)
+
+Average EV Price =
+AVERAGE('Dim Vehicle'[Average Price])
+
+Charging Station Coverage =
+DIVIDE([Total Charging Points], [Total EV Stock]) * 1000
+
+Market Growth % =
+[YoY Growth %]
+
+YoY Growth % =
+VAR CurrentSales = [Total EV Sales]
+VAR PreviousSales =
+    CALCULATE(
+        [Total EV Sales],
+        DATEADD('Dim Date'[Date], -1, YEAR)
+    )
+RETURN
+DIVIDE(CurrentSales - PreviousSales, PreviousSales)
+
+Market Share % =
+DIVIDE(
+    [Total EV Sales],
+    CALCULATE(
+        [Total EV Sales],
+        ALL('Dim Manufacturer')
+    )
+)
+
+Revenue Contribution =
+DIVIDE(
+    [Total Revenue],
+    CALCULATE(
+        [Total Revenue],
+        ALL('Dim Manufacturer')
+    )
+)
+
+CAGR =
+VAR FirstYear = MIN('Dim Date'[Year])
+VAR LastYear = MAX('Dim Date'[Year])
+VAR FirstSales =
+    CALCULATE(
+        [Total EV Sales],
+        FILTER(ALL('Dim Date'), 'Dim Date'[Year] = FirstYear)
+    )
+VAR LastSales =
+    CALCULATE(
+        [Total EV Sales],
+        FILTER(ALL('Dim Date'), 'Dim Date'[Year] = LastYear)
+    )
+VAR YearCount = LastYear - FirstYear
+RETURN
+IF(
+    YearCount > 0 && FirstSales > 0,
+    POWER(DIVIDE(LastSales, FirstSales), 1 / YearCount) - 1
+)
+
+Running Total Sales =
+CALCULATE(
+    [Total EV Sales],
+    FILTER(
+        ALLSELECTED('Dim Date'[Date]),
+        'Dim Date'[Date] <= MAX('Dim Date'[Date])
+    )
+)
+
+Manufacturer Rank =
+RANKX(
+    ALLSELECTED('Dim Manufacturer'[Manufacturer]),
+    [Total EV Sales],
+    ,
+    DESC,
+    DENSE
+)
+
+Top Manufacturer =
+VAR RankedManufacturers =
+    TOPN(
+        1,
+        ALLSELECTED('Dim Manufacturer'[Manufacturer]),
+        [Total EV Sales],
+        DESC
+    )
+RETURN
+CONCATENATEX(RankedManufacturers, 'Dim Manufacturer'[Manufacturer], ", ")
+
+Top Country =
+VAR RankedCountries =
+    TOPN(
+        1,
+        ALLSELECTED('Dim Country'[Country]),
+        [Total EV Sales],
+        DESC
+    )
+RETURN
+CONCATENATEX(RankedCountries, 'Dim Country'[Country], ", ")
+
+BEV Sales =
+CALCULATE(
+    [Total EV Sales],
+    'Dim Powertrain'[Powertrain] = "BEV"
+)
+
+PHEV Sales =
+CALCULATE(
+    [Total EV Sales],
+    'Dim Powertrain'[Powertrain] = "PHEV"
+)
+
+BEV Share % =
+DIVIDE([BEV Sales], [Total EV Sales])
+
+PHEV Share % =
+DIVIDE([PHEV Sales], [Total EV Sales])
+
+Charging Readiness Score =
+VAR CoverageScore = MIN(DIVIDE([Charging Station Coverage], 40), 1)
+VAR FastChargerShare = DIVIDE([Fast Charging Points], [Total Charging Points])
+RETURN
+(CoverageScore * 0.65) + (FastChargerShare * 0.35)
+
+Infrastructure Gap =
+VAR RequiredChargers = DIVIDE([Total EV Stock], 25)
+RETURN
+RequiredChargers - [Total Charging Points]
+
+Forecast Sales =
+SUM('Fact EV Forecast'[Forecast EV Sales])
+
+Forecast Growth % =
+VAR CurrentForecast = [Forecast Sales]
+VAR PreviousForecast =
+    CALCULATE(
+        [Forecast Sales],
+        DATEADD('Dim Date'[Date], -1, YEAR)
+    )
+RETURN
+DIVIDE(CurrentForecast - PreviousForecast, PreviousForecast)
+
+Selected Market Summary =
+VAR CountryName = SELECTEDVALUE('Dim Country'[Country], "Selected markets")
+RETURN
+CountryName
+    & " recorded "
+    & FORMAT([Total EV Sales], "#,##0")
+    & " EV sales with "
+    & FORMAT([YoY Growth %], "0.0%")
+    & " YoY growth."

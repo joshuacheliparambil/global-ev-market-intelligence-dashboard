@@ -1,0 +1,19 @@
+# Power BI temporary files
+*.tmp
+~$*
+
+# Local raw data files
+data/raw/
+data/processed/
+
+# Keep documentation and lookup structures
+!data/README.md
+!data/lookup/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
